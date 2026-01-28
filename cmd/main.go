@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Daemon0x0000000/lql/pkg/lql"
+	"github.com/Daemon0x00000000/lql/pkg/lql"
 )
 
 // User représente un utilisateur du système
