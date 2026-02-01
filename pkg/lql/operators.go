@@ -7,12 +7,10 @@ import (
 )
 
 const (
-	AND  LogicalOperator = "^"
-	OR   LogicalOperator = "^OR"
-	XOR  LogicalOperator = "^XOR"
-	XNOR LogicalOperator = "^XNOR"
-	NOR  LogicalOperator = "^NOR"
-	NAND LogicalOperator = "^NAND"
+	AND LogicalOperator = "^"
+	OR  LogicalOperator = "^OR"
+	NOT LogicalOperator = "!"
+	XOR LogicalOperator = "^XOR"
 )
 
 const (
@@ -32,9 +30,6 @@ const (
 )
 
 var logicalOperatorsOrdered = []LogicalOperator{
-	XNOR,
-	NAND,
-	NOR,
 	XOR,
 	OR,
 	AND,
@@ -73,14 +68,6 @@ var logicalOperators = LogicalOperatorMapping{
 		}
 		return false
 	},
-	NOR: func(results []bool) bool {
-		for _, result := range results {
-			if result {
-				return false
-			}
-		}
-		return true
-	},
 	XOR: func(results []bool) bool {
 		count := 0
 		for _, result := range results {
@@ -89,26 +76,6 @@ var logicalOperators = LogicalOperatorMapping{
 			}
 		}
 		return count == 1
-	},
-	XNOR: func(results []bool) bool {
-		if len(results) == 0 {
-			return true
-		}
-		count := 0
-		for _, result := range results {
-			if result {
-				count++
-			}
-		}
-		return count == 0 || count == len(results)
-	},
-	NAND: func(results []bool) bool {
-		for _, result := range results {
-			if !result {
-				return true
-			}
-		}
-		return false
 	},
 }
 
