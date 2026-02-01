@@ -16,8 +16,8 @@ func (vm *VM) DataStack() []Value {
 	return vm.dataStack
 }
 
-func NewVM(bytecode []byte) *VM {
-	return &VM{bytecode: bytecode, globals: make(map[string]Value), dataStack: make([]Value, 0), nativeFuncs: make([]NativeFunc, 0)}
+func NewVM(bytecode []byte, nativeFuncs []NativeFunc) *VM {
+	return &VM{bytecode: bytecode, globals: make(map[string]Value), dataStack: make([]Value, 0), nativeFuncs: nativeFuncs}
 }
 
 func (vm *VM) LoadRecords(records map[string]interface{}) error {
