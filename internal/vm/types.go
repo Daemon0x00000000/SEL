@@ -1,6 +1,9 @@
 package vm
 
-import "fmt"
+import (
+	"cmp"
+	"fmt"
+)
 
 type NativeFunc func(args []Value) (Value, error)
 
@@ -35,39 +38,63 @@ func (v Value) Compare(other Value) (int, error) {
 	}
 
 	switch v.Type {
-	case TYPE_INT8:
-		if v.Int8 < other.Int8 {
+	case TYPE_BOOL:
+		if v.Bool == other.Bool {
+			return 0, nil
+		} else if !v.Bool && other.Bool {
 			return -1, nil
-		} else if v.Int8 > other.Int8 {
-			return 1, nil
 		}
-		return 0, nil
+
+		return 1, nil
+	case TYPE_INT8:
+		return cmpInt(v.Int8, other.Int8), nil
 
 	case TYPE_INT16:
-		if v.Int16 < other.Int16 {
-			return -1, nil
-		} else if v.Int16 > other.Int16 {
-			return 1, nil
-		}
-		return 0, nil
+		return cmpInt(v.Int16, other.Int16), nil
 
 	case TYPE_INT32:
-		if v.Int32 < other.Int32 {
-			return -1, nil
-		} else if v.Int32 > other.Int32 {
-			return 1, nil
-		}
-		return 0, nil
+		return cmpInt(v.Int32, other.Int32), nil
 
 	case TYPE_STRING:
-		if v.String < other.String {
+		return cmpInt(v.String, other.String), nil
+
+	case TYPE_ARRAY:
+		minLen := len(v.Array)
+		if len(other.Array) < minLen {
+			minLen = len(other.Array)
+		}
+
+		for i := 0; i < minLen; i++ {
+			elem := v.Array[i]
+
+			res, err := elem.Compare(other.Array[i])
+			if err != nil { //  [1,3,-2] [1,2,0] = [0, 1, -1]
+				return 0, err
+			}
+
+			if res != 0 {
+				return res, nil // first diff
+			}
+		}
+
+		if len(v.Array) < len(other.Array) {
 			return -1, nil
-		} else if v.String > other.String {
+		} else if len(v.Array) > len(other.Array) {
 			return 1, nil
 		}
+
 		return 0, nil
 
 	default:
 		return 0, fmt.Errorf("type %v does not support comparison", v.Type)
 	}
+}
+
+func cmpInt[T cmp.Ordered](a, b T) int {
+	if a < b {
+		return -1
+	} else if a > b {
+		return 1
+	}
+	return 0
 }
