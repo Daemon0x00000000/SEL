@@ -1,7 +1,5 @@
 package vm
 
-import "github.com/Daemon0x00000000/lql/pkg/lql"
-
 const (
 	PUSH          OpCode = 0x00
 	POP           OpCode = 0x01
@@ -29,11 +27,4 @@ func (op OpCode) isLogical() bool {
 
 func (op OpCode) isComparison() bool {
 	return op >= OP_EQ && op <= OP_IN
-}
-
-var logicalToOpCodes = map[lql.LogicalOperator]OpCode{
-	lql.AND: OP_AND,
-	lql.OR:  OP_OR,
-	lql.XOR: OP_XOR,
-	lql.NOT: OP_NOT,
 }

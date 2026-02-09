@@ -47,16 +47,16 @@ func (v Value) Compare(other Value) (int, error) {
 
 		return 1, nil
 	case TYPE_INT8:
-		return cmpInt(v.Int8, other.Int8), nil
+		return cmpGeneric(v.Int8, other.Int8), nil
 
 	case TYPE_INT16:
-		return cmpInt(v.Int16, other.Int16), nil
+		return cmpGeneric(v.Int16, other.Int16), nil
 
 	case TYPE_INT32:
-		return cmpInt(v.Int32, other.Int32), nil
+		return cmpGeneric(v.Int32, other.Int32), nil
 
 	case TYPE_STRING:
-		return cmpInt(v.String, other.String), nil
+		return cmpGeneric(v.String, other.String), nil
 
 	case TYPE_ARRAY:
 		minLen := len(v.Array)
@@ -90,7 +90,7 @@ func (v Value) Compare(other Value) (int, error) {
 	}
 }
 
-func cmpInt[T cmp.Ordered](a, b T) int {
+func cmpGeneric[T cmp.Ordered](a, b T) int {
 	if a < b {
 		return -1
 	} else if a > b {

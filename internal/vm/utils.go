@@ -124,3 +124,88 @@ func (vm *VM) convertInterfaceToValue(val interface{}) (Value, error) {
 	}
 	return Value{}, fmt.Errorf("unsupported type: %T", val)
 }
+
+func SerializeLoadGlobal(name string) []byte {
+	length := byte(len(name))
+	bytes := []byte{byte(LOAD_GLOBAL), length}
+	bytes = append(bytes, []byte(name)...)
+	return bytes
+}
+
+func SerializePush(val interface{}) ([]byte, error) {
+	valueBytes, err := serializeValue(val)
+	if err != nil {
+		return nil, err
+	}
+	return append([]byte{byte(PUSH)}, valueBytes...), nil
+}
+
+func SerializeOperator(op OpCode) []byte {
+	return []byte{byte(op)}
+}
+
+// format : [type][len][data]
+func serializeValue(val interface{}) ([]byte, error) {
+	typ, err := inferType(val)
+	if err != nil {
+		return nil, err
+	}
+
+	switch v := val.(type) {
+	case int:
+		_, intVal := determineIntType(v)
+		switch typ {
+		case TYPE_INT8:
+			return []byte{byte(typ), 1, byte(intVal.(int8))}, nil
+		case TYPE_INT16:
+			buf := make([]byte, 2)
+			binary.BigEndian.PutUint16(buf, uint16(intVal.(int16)))
+			return append([]byte{byte(typ), 2}, buf...), nil
+		case TYPE_INT32:
+			buf := make([]byte, 4)
+			binary.BigEndian.PutUint32(buf, uint32(intVal.(int32)))
+			return append([]byte{byte(typ), 4}, buf...), nil
+		}
+
+	case string:
+		payload := []byte(v)
+		return append([]byte{byte(typ), byte(len(payload))}, payload...), nil
+
+	case bool:
+		var b byte
+		if v {
+			b = 1
+		}
+		return []byte{byte(typ), 1, b}, nil
+
+	case []interface{}:
+		// array nested — récursif
+		buf := []byte{byte(typ), byte(len(v))}
+		for _, elem := range v {
+			elemBytes, err := serializeValue(elem)
+			if err != nil {
+				return nil, err
+			}
+			buf = append(buf, elemBytes...)
+		}
+		return buf, nil
+	}
+
+	return nil, fmt.Errorf("unsupported type: %T", val)
+}
+
+func inferType(val interface{}) (Type, error) {
+	switch v := val.(type) {
+	case int:
+		typ, _ := determineIntType(v)
+		return typ, nil
+	case string:
+		return TYPE_STRING, nil
+	case bool:
+		return TYPE_BOOL, nil
+	case []interface{}:
+		return TYPE_ARRAY, nil
+	default:
+		return 0, fmt.Errorf("unsupported type: %T", val)
+	}
+}
