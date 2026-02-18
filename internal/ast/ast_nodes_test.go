@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/Daemon0x00000000/lql/internal/vm"
+	"github.com/Daemon0x00000000/sel/internal/vm"
 )
 
 func TestComparisonNode_String(t *testing.T) {

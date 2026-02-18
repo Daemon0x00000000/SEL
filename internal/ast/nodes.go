@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/Daemon0x00000000/lql/internal/vm"
+	"github.com/Daemon0x00000000/sel/internal/vm"
 )
 
 type Node interface {

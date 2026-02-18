@@ -1,6 +1,6 @@
 package ast
 
-import "github.com/Daemon0x00000000/lql/internal/vm"
+import "github.com/Daemon0x00000000/sel/internal/vm"
 
 type Field string
 type LogicalOperator string

@@ -3,7 +3,7 @@ package ast
 import (
 	"testing"
 
-	"github.com/Daemon0x00000000/lql/internal/vm"
+	"github.com/Daemon0x00000000/sel/internal/vm"
 )
 
 // assertNoError vérifie qu'il n'y a pas d'erreur

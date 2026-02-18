@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/Daemon0x00000000/lql/pkg/lql"
+	"github.com/Daemon0x00000000/sel"
 )
 
 func main() {
-	expr := &lql.Expression{}
+	expr := &sel.Expression{}
 
 	query := "!(sys_id=123^XORnameCONTAINS'example')"
 	fmt.Printf("Query: %s\n\n", query)

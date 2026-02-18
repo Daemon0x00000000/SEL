@@ -1,7 +1,7 @@
 package ast
 
 import (
-	"github.com/Daemon0x00000000/lql/internal/vm"
+	"github.com/Daemon0x00000000/sel/internal/vm"
 )
 
 const (

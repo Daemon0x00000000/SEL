@@ -1,10 +1,10 @@
-package lql
+package sel
 
 import (
 	"fmt"
 
-	iast "github.com/Daemon0x00000000/lql/internal/ast"
-	"github.com/Daemon0x00000000/lql/internal/vm"
+	iast "github.com/Daemon0x00000000/sel/internal/ast"
+	"github.com/Daemon0x00000000/sel/internal/vm"
 )
 
 type Expression struct {
